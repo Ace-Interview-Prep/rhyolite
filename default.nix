@@ -81,8 +81,11 @@ let
       vessel = haskellLib.doJailbreak super.vessel;
       monoid-map = haskellLib.doJailbreak super.monoid-map;
 
-      beam-migrate = self.callHackage "beam-migrate" "0.5.2.0" {};
-
+      #beam-migrate = self.callHackage "beam-migrate" "0.5.2.0" {};
+      beam-migrate = haskellLib.doJailbreak (self.callCabal2nix "beam-migrate" (repos.beam + "/beam-migrate") {});
+      beam-postgres = (haskellLib.dontCheck (haskellLib.doJailbreak (self.callCabal2nix "beam-postgres" (repos.beam + "/beam-postgres") {})));
+      beam-core = (haskellLib.dontCheck (haskellLib.doJailbreak (self.callCabal2nix "beam-core" (repos.beam + "/beam-core") {})));
+      
       # 'locale' is broken on nix darwin which is required by postgres 'initdb'
       rhyolite-beam-task-worker-backend = if pkgs.stdenv.hostPlatform.isDarwin
       then
