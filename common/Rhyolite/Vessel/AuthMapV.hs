@@ -12,6 +12,7 @@
 {-# Language UndecidableInstances #-}
 {-# Language ScopedTypeVariables #-}
 {-# Language RankNTypes #-}
+{-# Language MultiParamTypeClasses #-}
 
 module Rhyolite.Vessel.AuthMapV where
 
@@ -137,6 +138,24 @@ instance
   type QueryResult (AuthMapV auth v (Compose c g)) = AuthMapV auth v (Compose c (VesselLeafWrapper (QueryResult (Vessel (SubVesselKey auth (ErrorV () v)) g))))
   crop (AuthMapV s) (AuthMapV r) = AuthMapV $ crop s r
 
+mapDecomposedV'
+  :: (Functor m, View v)
+  => (v Proxy -> m (v h))
+  -> v (Compose (MMap.MonoidalMap c) g)
+  -> m (Maybe (v (Compose (MMap.MonoidalMap c) h)))
+mapDecomposedV' f v = cropV recompose v <$> (f $ mapV (\_ -> Proxy) v)
+  where
+    recompose :: Compose (MMap.MonoidalMap c) g a -> h a -> Compose (MMap.MonoidalMap c) h a
+    recompose (Compose s) i = Compose $ i <$ s
+
+instance (View v, Ord token) => Keyed
+    token
+    (ErrorV () v g)
+    (AuthMapV token v g)
+    (AuthMapV token v g')
+    (ErrorV () v g') where
+  key k = Path (AuthMapV . singletonSubVessel k) (lookupSubVessel k . unAuthMapV)
+
 -- | Given a way to verify that a token corresponds to a valid identity and
 -- a way to handle queries whose result does not depend on the particular
 -- identity making the query, handles each query efficiently while
@@ -145,16 +164,17 @@ instance
 -- token is typically like 'Signed (AuthToken Identity)'
 -- user is typically 'Id Account', iso to 'AuthToken Identity'
 handleAuthMapQuery
-  :: (Monad m, Ord token, View v)
+  :: forall m v token user f g.
+     (Monad m, Ord token, View v, Applicative g)
   => (token -> Maybe user)
   -- ^ How to figure out the identity corresponding to a token. Note: this is pure because it absolutely must be cheap, and we don't want people
   -- attempting to put a database query inside it, which would result in terrible performance failures. Fast IO would be permissible, but generally
   -- decrypting a token with a known CSK can be done with a pure function.
-  -> (v Proxy -> m (v Identity))
+  -> (forall proxy. v proxy -> m (v g))
   -- ^ Handle the aggregate query for all identities
-  -> AuthMapV token v Proxy
+  -> AuthMapV token v f
   -- ^ Private views parameterized by tokens
-  -> m (AuthMapV token v Identity)
+  -> m (AuthMapV token v g)
 handleAuthMapQuery readToken handler (AuthMapV vt) = do
   let unfilteredVt = getSubVessel vt
       unvalidatedTokens = MMap.keys unfilteredVt
@@ -163,7 +183,7 @@ handleAuthMapQuery readToken handler (AuthMapV vt) = do
       invalidTokens = MMap.fromSet (\_ -> failureErrorV ()) $
         Set.difference (Set.fromList unvalidatedTokens) validTokens
       v = condenseV filteredVt
-  v' <- disperseV . fromMaybe emptyV <$> mapDecomposedV (buildErrorV (fmap Right . handler)) v
+  v' <- disperseV . fromMaybe emptyV <$> mapDecomposedV' (buildErrorV (fmap Right . handler)) v
   -- The use of mapDecomposedV guarantees that the valid and invalid token sets are disjoint
   pure $ AuthMapV $ mkSubVessel $ MMap.unionWith const invalidTokens v'
 
@@ -189,8 +209,8 @@ type instance ViewQueryResult (TaggedQuery w a) = (w, a)
 -- | Like 'handleAuthMapQuery' but the result can depend on the specific identity.
 -- This is implemented naively so that the query is done separately for each valid identity.
 handlePersonalAuthMapQuery
-  :: forall m token v user.
-     (Monad m, Ord token, View v, Ord user)
+  :: forall m token v user p q.
+     (Monad m, Ord token, View v, Ord user, Applicative q)
   => (token -> Maybe user)
   -- ^ How to figure out the identity corresponding to a token. Note: this is pure because it absolutely must be cheap. See the corresponding comment on
   -- 'handleAuthMapQuery'.
@@ -198,9 +218,9 @@ handlePersonalAuthMapQuery
      -> m (v (Compose (MMap.MonoidalMap user) Identity))
      )
   -- ^ Handle the query for each individual identity
-  -> AuthMapV token v Proxy
+  -> AuthMapV token v p
   -- ^ Personal views parameterized by tokens
-  -> m (AuthMapV token v Identity)
+  -> m (AuthMapV token v q)
 handlePersonalAuthMapQuery readToken handler vt = do
   let unauthorisedAuthMapSingleton token = Map.singleton token $ failureErrorV ()
 
@@ -212,7 +232,7 @@ handlePersonalAuthMapQuery readToken handler vt = do
           Just u' -> pure $ Just $ mapV (Compose . (MMap.singleton u')) v
 
       condenseTokens
-        :: Compose (MMap.MonoidalMap token) (Compose (MMap.MonoidalMap user) Proxy) a
+        :: Compose (MMap.MonoidalMap token) (Compose (MMap.MonoidalMap user) p) a
         -> Compose (MMap.MonoidalMap user) (TaggedQuery (Set token)) a
       condenseTokens =
         Compose
@@ -221,9 +241,9 @@ handlePersonalAuthMapQuery readToken handler vt = do
 
       disperseTokens
         :: MMap.MonoidalMap user (Set token, a)
-        -> Compose (MMap.MonoidalMap token) Identity a
+        -> Compose (MMap.MonoidalMap token) q a
       disperseTokens = Compose . MMap.MonoidalMap
-        . foldMap (\(t, a) -> Map.fromSet (const (Identity a)) t)
+        . foldMap (\(t, a) -> Map.fromSet (const (pure a)) t)
 
   (vtReadToken, invalidTokens) <- runWriterT
     $ fmap (mkSubVessel . MMap.MonoidalMap)

@@ -1,8 +1,8 @@
 {
   "owner": "obsidiansystems",
   "repo": "vessel",
-  "branch": "release/0.3.0.0-r1",
+  "branch": "pzp",
   "private": false,
-  "rev": "a0eafdd20b3844dd23e3b0ac537049c60b9049b0",
-  "sha256": "19nn25sdr4hxvd9i81aqvx2hm7c6dg9zzb244rl21jp689nnkxqk"
+  "rev": "15334738886e8f2504363433e66f5c2ce0d8b0ab",
+  "sha256": "1mk5m47ssdvzqs4blbc5ykcm2jy25pa78hhp26hp3xbcqaa7wh0r"
 }

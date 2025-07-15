@@ -1,8 +1,8 @@
 {
   "owner": "obsidiansystems",
   "repo": "gargoyle",
-  "branch": "develop",
+  "branch": "dylang/haskell.nix",
   "private": false,
-  "rev": "d9a2b0ab4297d883caef784c7c11891611a6d4b0",
-  "sha256": "1rxqvy10bgzd3bldrv223m71j3nll297llcpaiz32nyzjdw2rwik"
+  "rev": "9d9959d92c68f415fb6cff67bbdc8df64a04817b",
+  "sha256": "0dwf02dhc2ys2c16wg7qj6ly135nrdih0601alyvkmpjmghrx0zk"
 }

@@ -1,8 +1,8 @@
 {
   "owner": "obsidiansystems",
   "repo": "beam-automigrate",
-  "branch": "develop",
+  "branch": "cg/pre-post-hooks",
   "private": false,
-  "rev": "5bd03ad708583d7edcd5a796e7d6306bdd3919a8",
-  "sha256": "1cl7z1srig1h7wzai583ggi4alc8ln39yrspvsagp9d94xrwads3"
+  "rev": "614c0dcaabf111774a9054e48430c290ecf7b4c7",
+  "sha256": "0gwhqbr7s74pdkdk59vgp1q4441hl4w8a750asjjb2nzj97b7dgz"
 }

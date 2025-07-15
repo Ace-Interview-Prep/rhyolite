@@ -20,6 +20,8 @@ library
     , async
     , beam-core
     , beam-postgres
+    , beam-transformers-common
+    , beam-transformers-backend
     , lens
     , lifted-base
     , monad-logger
@@ -54,6 +56,7 @@ test-suite test
     , beam-postgres
     , containers
     , filepath
+    , beam-transformers-backend
     , gargoyle-postgresql-connect
     , hspec
     , lens
