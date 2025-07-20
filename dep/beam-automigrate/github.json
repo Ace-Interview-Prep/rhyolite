@@ -1,8 +1,8 @@
 {
-  "owner": "obsidiansystems",
+  "owner": "Ace-Interview-Prep",
   "repo": "beam-automigrate",
-  "branch": "cg/pre-post-hooks",
+  "branch": "gs/bump-del-sequence-priority",
   "private": false,
-  "rev": "32209fe66902225b4fbeb55f9d57117a1def953c",
-  "sha256": "0gdq8wpa0dmpvi148rfz990bqwxryfkypmqynpdq475c09zfx82d"
+  "rev": "bc0a985ac12c42303c9b2e57d38782c635a24084",
+  "sha256": "1z06aq9nhf6v9d39zchjyxg7ri5xpk6cwvnkyqjhm8rsiajamv9b"
 }
