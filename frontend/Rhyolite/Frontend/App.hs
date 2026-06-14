@@ -2,7 +2,7 @@
 
 Frontend part of the view/viewselector implementation. Here we have the
 definition of 'RhyoliteWidget' and the functions to run it, 'runRhyoliteWidget'
-and 'runObeliskRhyoliteWidget'. We also have the 'watchViewSelector' function
+and 'runJengaRhyoliteWidget'. We also have the 'watchViewSelector' function
 that's used in the frontend module of a typical app.
 -}
 
@@ -51,11 +51,11 @@ import Data.Text (Text)
 import qualified Data.Text as T
 import qualified Data.Text.Encoding as T
 import Data.Text.Encoding (decodeUtf8)
-import Data.Witherable (Filterable)
+import Witherable (Filterable)
 import GHC.Generics (Generic)
 import Network.URI (URI, parseURI)
-import Obelisk.Frontend.Cookie
-import Obelisk.Route.Frontend (RouteToUrl(..), Routed(..), SetRoute(..))
+import Jenga.Frontend.Cookie
+import Jenga.Route.Frontend (RouteToUrl(..), Routed(..), SetRoute(..))
 import qualified Reflex as R
 import Reflex.Dom.Core hiding (MonadWidget, Request)
 import Reflex.Host.Class
@@ -64,9 +64,9 @@ import Reflex.Time (throttleBatchWithLag)
 import Rhyolite.Api
 import Rhyolite.WebSocket
 
-import Obelisk.Configs
-import Obelisk.Route
-import Obelisk.Route.Frontend
+import Jenga.Configs
+import Jenga.Route
+import Jenga.Route.Frontend
 
 #if defined(ghcjs_HOST_OS)
 import GHCJS.DOM.Types (MonadJSM, pFromJSVal)
@@ -283,8 +283,8 @@ type MonadWidget' t m =
 
 -- ** Run a rhyolite frontend
 
--- | Runs a rhyolite frontend widget that uses obelisk routing. See 'runRhyoliteWidget'.
-runObeliskRhyoliteWidget ::
+-- | Runs a rhyolite frontend widget that uses Jenga routing. See 'runRhyoliteWidget'.
+runJengaRhyoliteWidget ::
   ( PerformEvent t m
   , TriggerEvent t m
   , PostBuild t m
@@ -308,7 +308,7 @@ runObeliskRhyoliteWidget ::
   -> R backendRoute -- ^ The "listen" backend route which is handled by the action produced by 'Rhyolite.Backend.App.serveDbOverWebsockets'
   -> RoutedT t (R frontendRoute) (RhyoliteWidget qFrontend req t m) a -- ^ Child widget
   -> RoutedT t (R frontendRoute) m (Dynamic t (AppWebSocket t qWire), a)
-runObeliskRhyoliteWidget toWire configRoute enc listenRoute child = do
+runJengaRhyoliteWidget toWire configRoute enc listenRoute child = do
   obR <- askRoute
   r' <- fmap (parseURI . T.unpack . T.strip . T.decodeUtf8) <$> getConfig configRoute
   let route = case r' of

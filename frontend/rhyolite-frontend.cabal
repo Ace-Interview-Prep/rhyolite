@@ -9,7 +9,7 @@ build-type:    Simple
 cabal-version: >=1.2
 synopsis:      Build apps that use a rhyolite backend as a datasource
 description:
-  Rhyolite frontend apps are typically obelisk- and reflex-based applications that need live-updating data from the backend. This package provides the adapters necessary to work with requests and streaming data from a rhyolite backend.
+  Rhyolite frontend apps are typically Jenga- and reflex-based applications that need live-updating data from the backend. This package provides the adapters necessary to work with requests and streaming data from a rhyolite backend.
 
 library
   hs-source-dirs:  .
@@ -35,9 +35,9 @@ library
     , lens
     , mtl
     , network-uri
-    , obelisk-executable-config-lookup
-    , obelisk-frontend
-    , obelisk-route
+    , jenga-executable-config-lookup
+    , jenga-frontend
+    , jenga-route
     , primitive
     , ref-tf
     , reflex

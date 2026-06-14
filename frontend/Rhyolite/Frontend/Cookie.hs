@@ -5,11 +5,11 @@ Description:
 Getting and setting cookies on the frontend. Cookies are base64 encoded.
 
 There's some overlap between the functions in this module and
-Obelisk.Frontend.Cookie. That module provides 'askCookies', which can also be
-used to retrieve cookies. The Obelisk module has the advantage of working
+Jenga.Frontend.Cookie. That module provides 'askCookies', which can also be
+used to retrieve cookies. The Jenga module has the advantage of working
 server-side as well, so that widgets that depend on the cookie can be
 prerendered. The functions in this module use javascript and, so, cannot be
-rendered server-side. If you're mixing the two, bear in mind that obelisk does
+rendered server-side. If you're mixing the two, bear in mind that Jenga does
 not currently demand that cookies be base64-encoded, while this module does,
 so you'll have to base64-decode the result of askCookies yourself.
 -}
@@ -129,7 +129,7 @@ data GetCookieJsonFailed
   = GetCookieJsonFailed_GetCookieFailed GetCookieFailed
   | GetCookieJsonFailed_ParseFailure String
 
--- | Read a cookie. You may want to use 'Obelisk.Frontend.Cookie.askCookies'
+-- | Read a cookie. You may want to use 'Jenga.Frontend.Cookie.askCookies'
 -- along with 'base64Decode' instead.
 getCookieJson :: (FromJSON v, MonadJSM m) => DOM.Document -> Text -> m (Either GetCookieJsonFailed v)
 getCookieJson d k = do

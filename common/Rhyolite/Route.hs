@@ -2,7 +2,7 @@
 Description: Legacy application routes
 
 This module is still here for backward compatibility reasons. You should use
-"Obelisk.Route" instead.
+"Jenga.Route" instead.
 -}
 {-# Language CPP #-}
 {-# Language FlexibleInstances #-}
@@ -85,7 +85,7 @@ routeToUrlDefault (baseProto, baseHost, basePort) r =
   in base (routeToQuery r) "" --TODO: https
 
 -- | Constructs a query string containing json-encoded route information.
--- Seriously, use 'Obelisk.Route' instead.
+-- Seriously, use 'Jenga.Route' instead.
 routeToQuery :: (ToJSON r, Default r, Eq r) => r -> String
 routeToQuery r = if r == def
   then ""

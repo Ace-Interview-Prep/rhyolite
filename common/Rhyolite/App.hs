@@ -45,7 +45,7 @@ import Data.Typeable (Typeable)
 import Data.Vessel
 import Data.Vessel.Void
 import Data.Vessel.Internal (VSum(..))
-import Data.Witherable (Filterable(..))
+import Witherable (Filterable(..))
 import GHC.Generics (Generic)
 import Reflex.Query.Class
 

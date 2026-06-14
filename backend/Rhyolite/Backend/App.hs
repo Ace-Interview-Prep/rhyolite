@@ -60,7 +60,7 @@ import Data.Text (Text)
 import qualified Data.Text.IO as T
 import Data.Typeable (Typeable)
 import Data.Vessel
-import Data.Witherable (Filterable(..))
+import Witherable (Filterable(..))
 import qualified Database.PostgreSQL.Simple as Pg
 import Debug.Trace (trace)
 import qualified Network.WebSockets as WS

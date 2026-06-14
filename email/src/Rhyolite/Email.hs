@@ -48,7 +48,7 @@ import Network.Mail.Mime (Mail)
 import Network.Mail.Mime (Address(..), Mail(..), htmlPart, plainPart)
 import Network.Mail.SMTP (simpleMail)
 import Network.Socket (HostName, PortNumber)
-import Obelisk.Route.Frontend
+import Jenga.Route.Frontend
 import Reflex
 import Reflex.Dom.Builder.Static
 import Rhyolite.Route

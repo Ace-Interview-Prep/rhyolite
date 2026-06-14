@@ -2,6 +2,7 @@
 -}
 {-# Language ConstraintKinds #-}
 {-# Language DeriveGeneric #-}
+{-# Language FlexibleContexts #-}
 {-# Language FlexibleInstances #-}
 {-# Language GADTs #-}
 {-# Language GeneralizedNewtypeDeriving #-}
